@@ -1,11 +1,13 @@
 'use strict';
-const dbUtilsFactory = require('../water-shape/persistence/sqlite3-adapter');
+const dbUtilsFactory = require('water-shape').persistence.sqlite3Adapter;
 const logger = require('../utils/logger')( '/../logs/hydro.log');
 const _ = require('lodash');
 const async = require('async');
+const sqlite3 = require('sqlite3');
+const uuid = require('uuid');
 const sequenceUtilsFactory = require('./sequenceManipulation.js');
 
-dbUtilsFactory(__dirname + '/../hydro.db', require('../schema/schema').schemaFactory(), logger, (dbUtils) => {return dbUtils.createTablesAndDefaultValues(_.partial(populateDB, dbUtils));});
+dbUtilsFactory(__dirname + '/../hydro.db', require('../schema/schema').schemaFactory(), logger, (dbUtils) => {return dbUtils.createTablesAndDefaultValues(_.partial(populateDB, dbUtils));}, _, async, sqlite3, uuid);
 
 /* Populate the database with records for testing. */
 function populateDB(db, callback) {

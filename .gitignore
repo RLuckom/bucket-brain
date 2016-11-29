@@ -5,6 +5,5 @@
 *.db
 node_modules
 dist
-spec/unit/water-shape/client/dist
 dist-demo
 app.pid

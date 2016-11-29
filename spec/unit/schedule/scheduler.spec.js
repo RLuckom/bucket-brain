@@ -4,11 +4,12 @@ var schedulerFactory = require('../../../schedule/scheduler');
 const controllerFactory = require('../../../schedule/livePeripheralTypeControlMethods');
 const moment = require('moment');
 var dbUtils = require('../../dbUtils.js');
-var dmiFactory = require('../../../water-shape/api/demo-adapter.js');
+var dmiFactory = require('water-shape').api.demoAdapter;
 var schema = require('../../../schema/schema.js');
 const uuid = require('uuid');
 const fs = require('fs');
 const _ = require('lodash');
+const async = require('async');
 var peripheralsFactory = require('../../../utils/peripherals.js');
 
 describe('gpio utils sets gpio pins', function() {
@@ -164,7 +165,7 @@ describe('gpio utils sets gpio pins', function() {
         dmi = populatedDb;
         done();
       }
-      dbUtils.insertRecordsIntoTables(dmiFactory(schema.schemaFactory(), logger), recordsToInsert, assigndb)
+      dbUtils.insertRecordsIntoTables(dmiFactory(schema.schemaFactory(), logger, _, async, uuid), recordsToInsert, assigndb)
     });
     it('reads sequences from the dmi and sets up timeouts correctly based on sequenceItems', function(done) {
       scheduler = schedulerFactory(dmi, hardwareManager, controllers, config, logger);
@@ -272,7 +273,7 @@ describe('gpio utils sets gpio pins', function() {
         dmi = populatedDb;
         done();
       }
-      dbUtils.insertRecordsIntoTables(dmiFactory(schema.schemaFactory(), logger), recordsToInsert, assigndb)
+      dbUtils.insertRecordsIntoTables(dmiFactory(schema.schemaFactory(), logger, _, async, uuid), recordsToInsert, assigndb)
     });
     it('reads sequences from the dmi and sets up timeouts correctly based on sequenceItems', function(done) {
       scheduler = schedulerFactory(dmi, hardwareManager, controllers, config, logger);

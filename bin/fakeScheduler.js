@@ -1,9 +1,13 @@
-const dmiFactory = require('./../water-shape/persistence/sqlite3-adapter.js');
+const dmiFactory = require('water-shape').persistence.sqlite3Adapter;
 const FILENAME = __dirname + '/../hydro.db';
 const schema = require('../schema/schema.js').schemaFactory();
 const logger = require('../utils/logger')( '/../logs/scheduler.log');
 const schedulerFactory = require('../schedule/scheduler');
 const controllers = require('../schedule/livePeripheralTypeControlMethods')(logger);
+const _ = require('lodash');
+const async = require('async');
+const sqlite3 = require('sqlite3');
+const uuid = require('uuid');
 const config = {
   RELOAD_SCHEDULE_SECONDS: 1
 };
@@ -46,4 +50,4 @@ dmiFactory(FILENAME, schema, logger, function(dmi) {
   console.log('dmi');
   dmi.sequence.list(function(e, s) {console.log(s);});
   schedulerFactory(dmi, hardwareManager, controllers, config, logger).start();
-});
+},  _, async, sqlite3, uuid);
