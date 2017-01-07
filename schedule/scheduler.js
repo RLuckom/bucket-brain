@@ -75,24 +75,19 @@ function createScheduler(dmi, hardwareManager, controllers, config, logger) {
       startPeripheral(newPeripheral);
       return;
     }
-    let replace = false;
     if (newPeripheral.sequence.defaultState !== currentPeripheral.sequence.defaultState) {
       logger.log('info', `default state of ${currentPeripheral.peripheral.name} has changed. Replacing default state`);
       currentPeripheral.executor.setDefault(newPeripheral.sequence.defaultState);
-      replace = true;
+      currentPeripheral.sequence.defaultState = newPeripheral.sequence.defaultState;
     }
     if (anyDifferent(currentPeripheral.sequenceItems, newPeripheral.sequenceItems)) {
-      logger.log('info', `sequence items of ${currentPeripheral.peripheral.name} has changed. Replacing sequence items`);
+      logger.log('info', `sequence items of ${currentPeripheral.peripheral.name} have changed. Replacing sequence items`);
       currentPeripheral.executor.replaceSequence(
         newPeripheral.sequence,
         newPeripheral.sequenceItems
       );
-      replace = true;
+      currentPeripheral.sequenceItems = _.cloneDeep(newPeripheral.sequenceItems);
     };
-    if (replace) {
-      _.remove(currentPeripherals, ['peripheral.uid', currentPeripheral.peripheral.uid])
-      currentPeripherals.push(newPeripheral);
-    }
   }
 
   function stopPeripheral(peripheral) {
